@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% block titulo %}Login y Register{% endblock %} {% block contenido %} {% load static %}
+<div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
+    <div class="wrapper wrapper--w680">
+        <div class="card card-4">
+            <div class="card-body">
+                <h2 class="title">Registration Form</h2>
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row row-space">
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">first name</label> {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">last name</label> {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-space">
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Birthday</label>
+                                <div class="input-group-icon">
+                                    {{ form.birthday}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Gender</label>
+                                <div class="p-t-10">
+                                    {{ form.gender}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-space">
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Email</label> {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Weight (Kg) </label> {{ form.peso }}
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">User Name </label> {{ form.username }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-space">
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Password</label> {{ form.password1 }}
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Confirm Password</label> {{ form.password2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="label">Goal</label>
+                        <div class="rs-select2 js-select-simple select--no-search">
+                            {{ form.goal }}
+                            <div class="select-dropdown"></div>
+                        </div>
+                    </div>
+                    <div class="p-t-15">
+                        <button class="btn btn--radius-2 btn--green" type="submit">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
