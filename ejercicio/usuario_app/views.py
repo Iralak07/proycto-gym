@@ -1,14 +1,30 @@
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, HttpResponseRedirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse_lazy
+from .forms import CustomUserCreationForm, CustomUserEditForm
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser
+
+
+
+@login_required()
+def index(request):
+    return render(request,'index.html')
+
 
 def register(request):
-    print(request.POST)
+    template_user = reverse_lazy('usuario_app:index')
+
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(template_user)
+    
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             # Puedes agregar aquí cualquier lógica adicional, como iniciar sesión automáticamente al usuario
-            return   render(request,'index.html') # Redirige al usuario a la página de inicio de sesión
+            return HttpResponseRedirect(template_user) # Redirige al usuario a la página de inicio de sesión
         else:
             print(form.errors)
             return render(request, 'register.html',{'form':form.errors})
@@ -16,17 +32,52 @@ def register(request):
         form = CustomUserCreationForm()
         return render(request, 'register.html', {'form': form})
 
-# def index(request):
-#     return render (request, "index.html")
+@login_required()
+def editPerfil(request):
+    if request.method == 'GET':
+        user = request.user
+        form = CustomUserEditForm(instance=user)
+        return render(request, 'register.html', {'form':form})
+    
+    if request.method == 'POST':
+        user = CustomUser.objects.get(username=request.user)
+        form = CustomUserEditForm(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+            return render(request,'index.html')
+        else:
+            print(form.errors)
+            return render(request, 'register.html',{'form':form.errors})
+        
 
-# def one_method(request):                # no se pasan valores a través de URL
-#     pass                                
+def autenticationView(request):
+    template_name = 'login.html'
+    template_user = reverse_lazy('usuario_app:index')
     
-# def another_method(request, my_val):	# my_val sería un número de la URL
-#     pass                                # dado el ejemplo anterior, my_val sería 23
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(template_user)
+
+    if request.method == 'POST':
+       print(request.POST['username'])
+       print(request.POST['password'])
+       user = authenticate(username=request.POST['username'], password=request.POST['password'])
+       print(user)
+       if user is not None:
+           login(request, user)
+           return HttpResponseRedirect(template_user)
+       else:
+        form = AuthenticationForm()
+        return render(request, template_name, {
+            'form': form,
+            })
+        
+       
+    else:
+        form = AuthenticationForm()
+        return render(request, template_name, {'form': form})
     
-# def yet_another(request, name):	        # el nombre sería una cadena de la URL
-#     pass                                # dado el ejemplo anterior, el nombre sería 'pooh'
+
+def logOutView(request):
+    logout(request)
     
-# def one_more(request, id, color): 	# id sería un número y colorea una cadena de la URL
-#     pass                                # dado el ejemplo anterior, la identificación sería 17 y color sería 'brown'
+    return HttpResponseRedirect(reverse_lazy('usuario_app:login'))

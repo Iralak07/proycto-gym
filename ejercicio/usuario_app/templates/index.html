@@ -20,6 +20,9 @@
 <div class="container mt-5">
     <h1>Bienvenidos a Mi Aplicación</h1>
     <hr>
+    Usuario: {{ request.user}}
+    <a href="{% url 'usuario_app:logout' %}">Logout</a>
+    <a href="{% url 'usuario_app:editPerfil'%}">Edit Perfil</a>
 </div>
 
 

@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 from usuario_app import views as usuario_app_views  # Importa la vista de registro
 
 urlpatterns = [
-    path('', usuario_app_views.register, name='home'),  # Establece la vista de registro como la página de inicio
     path('admin/', admin.site.urls),
     path('usuario_app/', include('usuario_app.urls')),
 ]

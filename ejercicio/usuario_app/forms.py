@@ -1,21 +1,28 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
+from django.contrib.auth.forms import AuthenticationForm
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'peso', 'foto_perfil', 'birthday','gender', 'goal']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'peso', 'birthday','gender', 'goal']
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date'}),
             'gender': forms.RadioSelect(choices=CustomUser.GENDER_CHOICES),
         }
 
+# forms.py en tu aplicación
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            # Eliminamos la opción predeterminada ("---------") del campo 'gender'
-            self.fields['gender'].empty_label = None
+class CustomUserEditForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'peso', 'foto_perfil', 'birthday','gender', 'goal']
+
+        # def __init__(self, *args, **kwargs):
+        #     super().__init__(*args, **kwargs)
+        #     # Eliminamos la opción predeterminada ("---------") del campo 'gender'
+        #     self.fields['gender'].empty_label = None
     # widgets = {
     #     'username': forms.TextInput(attrs={'class': 'input--style-4'}),
     #     'first_name': forms.TextInput(attrs={'class': 'input--style-4'}),
